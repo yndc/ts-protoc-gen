@@ -49,6 +49,17 @@ function isUsed(fileDescriptor: FileDescriptorProto, pseudoNamespace: string, ex
   });
 }
 
+function renderHandleCallType(method: RPCMethodDescriptor) {
+  const type = method.requestStream && method.responseStream
+    ? `handleBidiStreamingCall`
+    : method.requestStream
+    ? `handleClientStreamingCall`
+    : method.responseStream
+    ? `handleServerStreamingCall`
+    : `handleUnaryCall`;
+  return `${type}<${method.requestType}, ${method.responseType}>`
+}
+
 type ImportDescriptor = {
   readonly namespace: string
   readonly path: string
@@ -195,6 +206,13 @@ function generateTypescriptDefinition(fileDescriptor: FileDescriptorProto, expor
       printer.printIndentedLn(`static readonly serviceName: string;`);
       service.methods.forEach(method => {
         printer.printIndentedLn(`static readonly ${method.nameAsPascalCase}: ${method.serviceName}${method.nameAsPascalCase};`);
+      });
+      printer.printLn(`}`);
+      printer.printEmptyLn();
+
+      printer.printLn(`export type ${service.name}Implementation = {`);
+      service.methods.forEach(method => {
+        printer.printIndentedLn(`${method.nameAsPascalCase}: ${renderHandleCallType(method)};`);
       });
       printer.printLn(`}`);
       printer.printEmptyLn();
