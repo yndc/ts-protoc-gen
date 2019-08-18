@@ -182,6 +182,7 @@ function generateTypescriptDefinition(fileDescriptor: FileDescriptorProto, expor
     .forEach(importDescriptor => {
       printer.printLn(`import * as ${importDescriptor.namespace} from "${importDescriptor.path}";`);
     });
+  printer.printLn(`import {handleUnaryCall, handleServerStreamingCall, handleClientStreamingCall, handleBidiStreamingCall} from "grpc";`);
   printer.printLn(`import {grpc} from "@improbable-eng/grpc-web";`);
   printer.printEmptyLn();
 

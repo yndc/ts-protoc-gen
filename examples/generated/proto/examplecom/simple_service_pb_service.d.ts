@@ -4,6 +4,7 @@
 import * as proto_examplecom_simple_service_pb from "../../proto/examplecom/simple_service_pb";
 import * as proto_othercom_external_child_message_pb from "../../proto/othercom/external_child_message_pb";
 import * as google_protobuf_empty_pb from "google-protobuf/google/protobuf/empty_pb";
+import {handleUnaryCall, handleServerStreamingCall, handleClientStreamingCall, handleBidiStreamingCall} from "grpc";
 import {grpc} from "@improbable-eng/grpc-web";
 
 type SimpleServiceDoUnary = {
@@ -58,6 +59,14 @@ export class SimpleService {
   static readonly DoClientStream: SimpleServiceDoClientStream;
   static readonly DoBidiStream: SimpleServiceDoBidiStream;
   static readonly Delete: SimpleServiceDelete;
+}
+
+export type SimpleServiceImplementation = {
+  DoUnary: handleUnaryCall<proto_examplecom_simple_service_pb.UnaryRequest, proto_othercom_external_child_message_pb.ExternalChildMessage>;
+  DoServerStream: handleServerStreamingCall<proto_examplecom_simple_service_pb.StreamRequest, proto_othercom_external_child_message_pb.ExternalChildMessage>;
+  DoClientStream: handleClientStreamingCall<proto_examplecom_simple_service_pb.StreamRequest, google_protobuf_empty_pb.Empty>;
+  DoBidiStream: handleBidiStreamingCall<proto_examplecom_simple_service_pb.StreamRequest, proto_othercom_external_child_message_pb.ExternalChildMessage>;
+  Delete: handleUnaryCall<proto_examplecom_simple_service_pb.UnaryRequest, proto_examplecom_simple_service_pb.UnaryResponse>;
 }
 
 export type ServiceError = { message: string, code: number; metadata: grpc.Metadata }

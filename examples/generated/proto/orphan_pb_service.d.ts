@@ -2,6 +2,7 @@
 // file: proto/orphan.proto
 
 import * as proto_orphan_pb from "../proto/orphan_pb";
+import {handleUnaryCall, handleServerStreamingCall, handleClientStreamingCall, handleBidiStreamingCall} from "grpc";
 import {grpc} from "@improbable-eng/grpc-web";
 
 type OrphanServiceDoUnary = {
@@ -26,6 +27,11 @@ export class OrphanService {
   static readonly serviceName: string;
   static readonly DoUnary: OrphanServiceDoUnary;
   static readonly DoStream: OrphanServiceDoStream;
+}
+
+export type OrphanServiceImplementation = {
+  DoUnary: handleUnaryCall<proto_orphan_pb.OrphanUnaryRequest, proto_orphan_pb.OrphanMessage>;
+  DoStream: handleServerStreamingCall<proto_orphan_pb.OrphanStreamRequest, proto_orphan_pb.OrphanMessage>;
 }
 
 export type ServiceError = { message: string, code: number; metadata: grpc.Metadata }
