@@ -57,7 +57,7 @@ function renderHandleCallType(method: RPCMethodDescriptor) {
     : method.responseStream
     ? `handleServerStreamingCall`
     : `handleUnaryCall`;
-  return `${type}<${method.requestType}, ${method.responseType}>`
+  return `${type}<${method.requestType}, ${method.responseType}>`;
 }
 
 type ImportDescriptor = {
